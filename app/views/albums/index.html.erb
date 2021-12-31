@@ -1,33 +1,23 @@
+<%= render 'shared/navbar' %>
 <p id="notice"><%= notice %></p>
 
-<h1>Albums</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Album name</th>
-      <th>Year</th>
-      <th>Artist</th>
-      <th>User</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="container-lg my-4">
+  <h1>Albums</h1>
+  <%= link_to 'New Album', new_album_path %>
+  <div class="cards">
     <% @albums.each do |album| %>
-      <tr>
-        <td><%= album.album_name %></td>
-        <td><%= album.year %></td>
-        <td><%= album.artist %></td>
-        <td><%= album.user_id %></td>
-        <td><%= link_to 'Show', album %></td>
-        <td><%= link_to 'Edit', edit_album_path(album) %></td>
-        <td><%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <div class="grid-card">
+        <div class="card-product-infos">
+          <div>
+            <h3><%= link_to album.album_name.capitalize, album_path(album) %></h5>
+            <p><%= album.year %></p>
+            <p><%= album.artist %></p>
+            <%= link_to 'Show', album %>
+            <%= link_to 'Edit', edit_album_path(album) %>
+            <%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <div>
+        </div>
+      </div>  
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Album', new_album_path %>
+  </div>
+</div>
