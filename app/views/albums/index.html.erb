@@ -1,23 +1,28 @@
 <%= render 'shared/navbar' %>
 <p id="notice"><%= notice %></p>
 
-<div class="container-lg my-4">
+<div class="container-lg my">
   <h1>Albums</h1>
-  <%= link_to 'New Album', new_album_path %>
   <div class="cards">
     <% @albums.each do |album| %>
       <div class="grid-card">
         <div class="card-product-infos">
           <div>
             <h3><%= link_to album.album_name.capitalize, album_path(album) %></h5>
-            <p><%= album.year %></p>
-            <p><%= album.artist %></p>
+            <p>Year: <%= album.year %></p>
+            <p>Artist: <%= album.artist %></p>
+          </div>
+          <div>
             <%= link_to 'Show', album %>
             <%= link_to 'Edit', edit_album_path(album) %>
             <%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %>
-          <div>
+          </div>
         </div>
-      </div>  
+      </div>
     <% end %>
   </div>
+  <%= link_to 'New Album', new_album_path %>
 </div>
+
+            
+          
