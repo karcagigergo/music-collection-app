@@ -1,6 +1,6 @@
 ### Title: Music collection app
 
-This is a music collection app made with Ruby On Rails. Link: (https://baby-names-list.herokuapp.com/)
+This is a music collection app made with Ruby On Rails. Link: (https://gergos-music-collection-app.herokuapp.com/)
 It is also a challenge by [Moat Builders] (https://www.moat.ai//).
 
 ### Specs:
