@@ -6,7 +6,7 @@
   <div class="form-inputs">
     <%= f.input :album_name %>
     <%= f.input :year %>
-    <%= f.input :artist %>
+    <%= f.input :artist_name, collection: @artist_names, include_blank: false %>
   </div>
 
   <div class="form-actions">

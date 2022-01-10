@@ -1,0 +1,19 @@
+<%= render 'shared/navbar' %>
+<p id="notice"><%= notice %></p>
+
+<div class="container-lg my">
+  <h1>Artists</h1>
+  <div class="cards">
+    <% @artists.each do |artist| %>
+      <div class="grid-card">
+        <div class="card-product-infos">
+          <div>
+            <h3><%= artist["name"] %></h3>
+            <p>Twitter: <%= artist["twitter"] %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to 'Albums', albums_path %>
+</div>

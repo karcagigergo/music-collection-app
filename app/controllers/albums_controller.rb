@@ -1,26 +1,30 @@
+require 'open-uri'
+require 'json'
+require 'rest-client'
+
+OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
+OpenURI::Buffer.const_set 'StringMax', 0
+
 class AlbumsController < ApplicationController
   before_action :set_album, only: %i[ show edit update destroy ]
+  before_action :get_artist_names, only: %i[ new create edit update ]
 
-  # GET /albums or /albums.json
   def index
     @albums = Album.all
   end
 
-  # GET /albums/1 or /albums/1.json
   def show
   end
 
-  # GET /albums/new
   def new
     @album = Album.new
   end
 
-  # GET /albums/1/edit
   def edit
   end
 
-  # POST /albums or /albums.json
   def create
+    @artist_names
     @album = Album.new(album_params)
     @album.user = current_user
     respond_to do |format|
@@ -34,7 +38,6 @@ class AlbumsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /albums/1 or /albums/1.json
   def update
     respond_to do |format|
       if @album.update(album_params)
@@ -47,7 +50,6 @@ class AlbumsController < ApplicationController
     end
   end
 
-  # DELETE /albums/1 or /albums/1.json
   def destroy
     @album.destroy
 
@@ -57,14 +59,31 @@ class AlbumsController < ApplicationController
     end
   end
 
+  def get_artists
+    url = "https://moat.ai/api/task/"
+    response = RestClient.get(url, headers={:Basic => 'ZGV2ZWxvcGVyOlpHVjJaV3h2Y0dWeQ=='})
+    @artists = JSON.parse(response.body).flatten
+  end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
+  
     def set_album
       @album = Album.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def album_params
-      params.require(:album).permit(:album_name, :year, :artist, :user_id)
+      params.require(:album).permit(:album_name, :year, :artist_name, :user_id)
     end
+
+    def get_artist_names
+      url = "https://moat.ai/api/task/"
+      response = RestClient.get(url, headers={:Basic => 'ZGV2ZWxvcGVyOlpHVjJaV3h2Y0dWeQ=='})
+      results = JSON.parse(response.body).flatten
+      @artist_names = []
+      results.each do |result|
+        @artist_names << result["name"]
+      end
+      @artist_names
+    end
+
 end

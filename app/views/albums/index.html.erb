@@ -10,12 +10,14 @@
           <div>
             <h3><%= link_to album.album_name.capitalize, album_path(album) %></h5>
             <p>Year: <%= album.year %></p>
-            <p>Artist: <%= album.artist %></p>
+            <p>Artist: <%= album.artist_name %></p>
           </div>
           <div>
             <%= link_to 'Show', album %>
             <%= link_to 'Edit', edit_album_path(album) %>
-            <%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% if current_user.role == "admin" %>
+              <%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
           </div>
         </div>
       </div>
