@@ -26,7 +26,15 @@ class AlbumsController < ApplicationController
   def create
     @album = Album.new(album_params)
     @album.user = current_user
-    create_respond_action
+    respond_to do |format|
+      if @album.save
+        format.html { redirect_to album_url(@album), notice: "Album was successfully created." }
+        format.json { render :show, status: :created, location: @album }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @album.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
@@ -42,16 +50,22 @@ class AlbumsController < ApplicationController
   end
 
   def destroy
-    @album.destroy
-
-    respond_to do |format|
-      format.html { redirect_to albums_url, notice: "Album was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user.admin?
+      @album.destroy
+      respond_to do |format|
+        format.html { redirect_to albums_url, notice: "Album was successfully destroyed." }
+        format.json { head :no_content }
+    end
+    else
+      respond_to do |format|
+        format.html { redirect_to @album, notice: 'Only Admins users can destroy Albums.' }
+        format.json { head :unauthorized }
+      end
     end
   end
 
   def fetch_artists
-    response = RestClient.get 'https://moat.ai/api/task/', { Basic: 'ZGV2ZWxvcGVyOlpHVjJaV3h2Y0dWeQ==' }
+    response = RestClient.get ENV['MOAT_API'], { Basic: ENV['MOAT_HEADERS'] }
     @artists = JSON.parse(response.body).flatten
   end
 
@@ -66,24 +80,12 @@ class AlbumsController < ApplicationController
   end
 
   def fetch_artist_names
-    response = RestClient.get 'https://moat.ai/api/task/', { Basic: 'ZGV2ZWxvcGVyOlpHVjJaV3h2Y0dWeQ==' }
+    response = RestClient.get ENV['MOAT_API'], { Basic: ENV['MOAT_HEADERS'] }
     results = JSON.parse(response.body).flatten
     @artist_names = []
     results.each do |result|
       @artist_names << result["name"]
     end
     @artist_names
-  end
-
-  def create_respond_action
-    respond_to do |format|
-      if @album.save
-        format.html { redirect_to album_url(@album), notice: "Album was successfully created." }
-        format.json { render :show, status: :created, location: @album }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @album.errors, status: :unprocessable_entity }
-      end
-    end
   end
 end

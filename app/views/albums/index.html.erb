@@ -15,9 +15,6 @@
           <div>
             <%= link_to 'Show', album %>
             <%= link_to 'Edit', edit_album_path(album) %>
-            <% if current_user.role == "admin" %>
-              <%= link_to 'Destroy', album, method: :delete, data: { confirm: 'Are you sure?' } %>
-            <% end %>
           </div>
         </div>
       </div>
